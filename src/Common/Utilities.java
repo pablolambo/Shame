@@ -42,6 +42,7 @@ public class Utilities {
     public static JProgressBar addShameBar(JFrame frame, JProgressBar shameBar, int x, int y, int width, int height) {
         shameBar = new JProgressBar(0, 100);
         shameBar.setBounds(x, y, width, height);
+        shameBar.setString("Shame progress");
         shameBar.setStringPainted(true);
         frame.add(shameBar);
         return shameBar;
@@ -50,6 +51,7 @@ public class Utilities {
     public static void addPredictionTextField(JFrame frame, JTextField predictionField, int x, int y, int width, int height) {
         predictionField.setBounds(x, y, width, height);
         frame.add(predictionField);
+        predictionField.setBorder(BorderFactory.createTitledBorder("Make a prediction of a result"));
     }
 
     public static JLabel addLabel(JFrame frame, JLabel shameImageLabel){

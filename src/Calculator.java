@@ -14,8 +14,7 @@ public class Calculator {
     private JProgressBar shameBar;
     private final JComboBox<String> operatorComboBox = new JComboBox<>(new String[]{"+", "-", "*", "/"});
     private final ImageIcon shameIcon = new ImageIcon("D:\\Studies\\5sem\\Shame\\Images\\shame.png");
-    private final ImageIcon goodJobIcon = new ImageIcon("goodjob.png");
-
+    private final ImageIcon goodJobIcon = new ImageIcon("D:\\Studies\\5sem\\Shame\\Images\\goodjob.png");
     private JLabel shameImageLabel = new JLabel();
     private JLabel goodJobLabel = new JLabel();
     private int consecutiveCorrectPredictions = 0;
@@ -31,7 +30,7 @@ public class Calculator {
         Utilities.addTextField(frame, resultField, 295, 20, 50, 30);
 
         shameBar = Utilities.addShameBar(frame, shameBar,50, 80, 300, 20);
-        Utilities.addPredictionTextField(frame, predictionField, 50, 110, 100, 30);
+        Utilities.addPredictionTextField(frame, predictionField, 50, 110, 180, 50);
 
         shameImageLabel = Utilities.addLabel(frame, shameImageLabel);
 
@@ -71,13 +70,13 @@ public class Calculator {
 
     private double performCalculation(double num1, double num2, String operator) {
         switch (operator) {
-            case "+":
+            case Constants.ADD:
                 return num1 + num2;
-            case "-":
+            case Constants.SUBTRACT:
                 return num1 - num2;
-            case "*":
+            case Constants.MULTIPLY:
                 return num1 * num2;
-            case "/":
+            case Constants.DIVIDE:
                 if (num2 != 0) {
                     return num1 / num2;
                 } else {
@@ -108,9 +107,14 @@ public class Calculator {
         int currentValue = shameBar.getValue();
         if (currentValue <= 75) {
             shameBar.setValue(currentValue + Constants.SHAME_PROGRESS_VALUE);
-        } else if (currentValue == 100){
+            shameBar.setString(currentValue + 25 + "%");
+        } else if (currentValue == 100) {
             showShameImage();
         }
+//        else {
+//            shameBar.setValue(0);
+//            shameBar.setString("Shame progress");
+//        }
     }
 
     private void showShameImage() {
@@ -125,6 +129,7 @@ public class Calculator {
 
     private void resetShameBar() {
         shameBar.setValue(0);
+        shameBar.setString("Shame progress");
         shameImageLabel.setIcon(null);
     }
 
