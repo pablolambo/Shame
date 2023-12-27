@@ -40,27 +40,39 @@ public class Calculator {
     private void calculate(ActionEvent e) {
         try
         {
-            double num1 = validateInput(firstInputField.getText());
-            double num2 = validateInput(secondInputField.getText());
+            double num1 = validateInput(firstInputField.getText(), false);
+            double num2 = validateInput(secondInputField.getText(), false);
             String operator = (String)operatorComboBox.getSelectedItem();
             double result = performCalculation(num1, num2, operator);
 
             resultField.setText(formatResult(result));
 
-            double userPrediction = validateInput(predictionField.getText());
-            if (userPrediction != result) {
+            double userPrediction = validateInput(predictionField.getText(), true);
+
+            if (userPrediction == Constants.DEFAULT_PREDICTION)
+            {
+                 consecutiveCorrectPredictions = 0;
+            }
+
+            if (userPrediction != result && userPrediction != Constants.DEFAULT_PREDICTION)
+            {
                 increaseShameBar();
                 consecutiveCorrectPredictions = 0;
-            } else {
+            }
+
+            if (userPrediction == result)
+            {
                 consecutiveCorrectPredictions++;
                 if (consecutiveCorrectPredictions == Constants.STREAK_THRESHOLD) {
                     displayGoodJobImage();
                     consecutiveCorrectPredictions = 0;
                 }
             }
+
             if(shameBar.getValue() == 100){
                 showShameImage();
             }
+
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(frame, "Invalid input. Please enter valid numbers.", "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ArithmeticException ex) {
@@ -95,7 +107,9 @@ public class Calculator {
         }
     }
 
-    private double validateInput(String input) {
+    private double validateInput(String input, boolean isPrediction) {
+        if(isPrediction && input.isEmpty())
+            return Constants.DEFAULT_PREDICTION;
         if (input.isEmpty()) {
             throw new NumberFormatException("Input is empty.");
         }
@@ -136,6 +150,7 @@ public class Calculator {
     private void displayGoodJobImage() {
         goodJobLabel.setIcon(goodJobIcon);
         JOptionPane.showMessageDialog(frame, goodJobLabel, "Good Job! 3 correct answers in a row!", JOptionPane.PLAIN_MESSAGE);
+        resetShameBar();
     }
     public static void main(String[] args) {
         SwingUtilities.invokeLater(Calculator::new);
