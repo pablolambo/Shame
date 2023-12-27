@@ -1,6 +1,6 @@
 # Java Calculator Study Project
 
-This Java calculator study project is designed for educational purposes to enhance my understanding of Java Swing components. It provides a simple graphical user interface (GUI) for performing basic operations with multiple functionalities and non-functionalities.
+This Java calculator study project is designed for educational purposes to enhance my understanding of Java Swing components and component programming concept. It provides a simple graphical user interface (GUI) for performing basic operations with multiple functionalities and non-functionalities.
 
 ## Prerequisites
 
