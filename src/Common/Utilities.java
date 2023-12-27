@@ -51,4 +51,11 @@ public class Utilities {
         predictionField.setBounds(x, y, width, height);
         frame.add(predictionField);
     }
+
+    public static JLabel addLabel(JFrame frame, JLabel shameImageLabel){
+        shameImageLabel = new JLabel();
+        shameImageLabel.setBounds(375, 50, 350, 350);
+        frame.add(shameImageLabel);
+        return shameImageLabel;
+    }
 }
