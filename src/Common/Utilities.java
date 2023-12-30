@@ -60,4 +60,10 @@ public class Utilities {
         frame.add(shameImageLabel);
         return shameImageLabel;
     }
+
+
+    public static void showMessageDialog(JFrame frame) {
+        String randomMessage = Constants.WELCOME_MESSAGES[(int) (Math.random() * Constants.WELCOME_MESSAGES.length)];
+        JOptionPane.showMessageDialog(frame, randomMessage, "Welcome", JOptionPane.INFORMATION_MESSAGE);
+    }
 }

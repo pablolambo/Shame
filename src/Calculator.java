@@ -23,6 +23,8 @@ public class Calculator {
     Calculator() {
         frame = Utilities.SetupFrame(frame);
 
+        Utilities.showMessageDialog(frame);
+
         Utilities.addTextField(frame, firstInputField,50, 20, 50, 30);
         Utilities.addOperatorComboBox(frame, 115, 20, 50, 30, operatorComboBox);
         Utilities.addTextField(frame, secondInputField,175, 20, 50, 30);
