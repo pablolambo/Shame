@@ -2,6 +2,7 @@ import Common.Constants;
 import Common.Utilities;
 
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.Random;
@@ -22,6 +23,7 @@ public class Calculator {
     private final ImageIcon goodJobIcon = new ImageIcon(Constants.PROJECT_DIRECTORY + "/Images/goodjob.png");
     private JLabel shameImageLabel = new JLabel();
     private JLabel goodJobLabel = new JLabel();
+    private JTextArea historyPanel;
     private int consecutiveCorrectPredictions = 0;
 
     Calculator() {
@@ -44,6 +46,9 @@ public class Calculator {
 
         proximityLabel.setBounds(250, 110, 150, 50);
         frame.add(proximityLabel);
+
+        historyPanel = Utilities.addHistoryPanel(frame, 360, 20, 200, 185);
+        historyPanel.setEditable(false);
 
         shameImageLabel = Utilities.addShameImageLabel(frame, shameImageLabel);
 
@@ -102,6 +107,8 @@ public class Calculator {
                 predictionField.setBackground(Color.RED);
                 consecutiveCorrectPredictions = 0;
             }
+
+            updateHistoryPanel(num1, num2, operator, result, userPrediction);
 
             if(shameBar.getValue() == 100){
                 showShameImage();
@@ -215,6 +222,34 @@ public class Calculator {
 
     private void showAbout(ActionEvent e) {
         JOptionPane.showMessageDialog(frame, Constants.ABOUT_MESSAGE, "About", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void updateHistoryPanel(double num1, double num2, String operator, double result, double userPrediction) {
+        StringBuilder historyEntry = new StringBuilder();
+        historyEntry.append(num1)
+                .append(" ")
+                .append(operator)
+                .append(" ")
+                .append(num2)
+                .append(" = ")
+                .append(result);
+
+        if (userPrediction != Constants.DEFAULT_PREDICTION) {
+            historyEntry.append(" | Prediction: ").append(userPrediction);
+        }
+
+        historyPanel.append(historyEntry + "\n");
+
+        int lineCount = historyPanel.getLineCount();
+        if (lineCount > 10) {
+            try {
+                int start = historyPanel.getLineStartOffset(lineCount - 10);
+                int end = historyPanel.getLineEndOffset(lineCount - 1);
+                historyPanel.replaceRange("", start, end);
+            } catch (BadLocationException ex) {
+                ex.printStackTrace();
+            }
+        }
     }
 
     public static void main(String[] args) {

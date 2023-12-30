@@ -83,6 +83,13 @@ public class Utilities {
         menuBar.add(aboutMenu);
 
         frame.setJMenuBar(menuBar);
+    }
 
+    public static JTextArea addHistoryPanel(JFrame frame, int x, int y, int width, int height) {
+        JTextArea historyPanel = new JTextArea();
+        JScrollPane scrollPane = new JScrollPane(historyPanel);
+        scrollPane.setBounds(x, y, width, height);
+        frame.add(scrollPane);
+        return historyPanel;
     }
 }
