@@ -66,7 +66,7 @@ public class Utilities {
         JOptionPane.showMessageDialog(frame, randomMessage, "Welcome", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    public static JMenuBar createMenuBar(JFrame frame, ActionListener helpListener, ActionListener aboutListener) {
+    public static void createMenuBar(JFrame frame, ActionListener helpListener, ActionListener aboutListener) {
         JMenuBar menuBar = new JMenuBar();
 
         JMenu helpMenu = new JMenu("Help");
@@ -84,6 +84,5 @@ public class Utilities {
 
         frame.setJMenuBar(menuBar);
 
-        return menuBar;
     }
 }

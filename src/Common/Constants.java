@@ -1,5 +1,7 @@
 package Common;
 
+import java.io.File;
+
 public class Constants {
     public static final String ADD = "+";
     public static final String SUBTRACT = "-";
@@ -20,11 +22,15 @@ public class Constants {
             "Predict wisely to keep the shame bar at bay!",
             "Let's calculate with a bit of excitement!"
     };
+
+    public static final String PROJECT_DIRECTORY = new File(System.getProperty("user.dir")).getParent();
+
     public static final String[] MEME_PATHS = {
-            "D:\\Studies\\5sem\\Shame\\Images\\Memes\\javatrzy.png",
-            "D:\\Studies\\5sem\\Shame\\Images\\Memes\\arraysize.png",
-            "D:\\Studies\\5sem\\Shame\\Images\\Memes\\javalife.png"
+            PROJECT_DIRECTORY + "/Images/Memes/javatrzy.png",
+            PROJECT_DIRECTORY + "/Images/Memes/arraysize.png",
+            PROJECT_DIRECTORY + "/Images/Memes/javalife.png"
     };
+
     public static final String HELP_MESSAGE = "Instructions:\n\n" +
             "1. Enter two numbers in the input fields.\n" +
             "2. Select an operator from the drop-down menu.\n" +

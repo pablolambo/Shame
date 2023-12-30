@@ -18,12 +18,11 @@ public class Calculator {
     private final JComboBox<String> operatorComboBox = new JComboBox<>(new String[]{"+", "-", "*", "/"});
     private JLabel proximityLabel = new JLabel();
     private String lastShownMemePath;
-    private final ImageIcon shameIcon = new ImageIcon("D:\\Studies\\5sem\\Shame\\Images\\shame.png");
-    private final ImageIcon goodJobIcon = new ImageIcon("D:\\Studies\\5sem\\Shame\\Images\\goodjob.png");
+    private final ImageIcon shameIcon = new ImageIcon(Constants.PROJECT_DIRECTORY + "/Images/shame.png");
+    private final ImageIcon goodJobIcon = new ImageIcon(Constants.PROJECT_DIRECTORY + "/Images/goodjob.png");
     private JLabel shameImageLabel = new JLabel();
     private JLabel goodJobLabel = new JLabel();
     private int consecutiveCorrectPredictions = 0;
-
 
     Calculator() {
         frame = Utilities.SetupFrame(frame);
@@ -160,10 +159,6 @@ public class Calculator {
         } else if (currentValue == 100) {
             showShameImage();
         }
-//        else {
-//            shameBar.setValue(0);
-//            shameBar.setString("Shame progress");
-//        }
     }
 
     private void showShameImage() {
@@ -207,7 +202,6 @@ public class Calculator {
         Random random = new Random();
         String randomMemePath;
 
-        // Keep picking a random meme until it's different from the last shown one
         do {
             randomMemePath = memePaths.get(random.nextInt(memePaths.size()));
         } while (randomMemePath.equals(lastShownMemePath));
