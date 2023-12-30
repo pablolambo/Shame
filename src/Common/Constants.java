@@ -20,4 +20,9 @@ public class Constants {
             "Predict wisely to keep the shame bar at bay!",
             "Let's calculate with a bit of excitement!"
     };
+    public static final String[] MEME_PATHS = {
+            "D:\\Studies\\5sem\\Shame\\Images\\Memes\\javatrzy.png",
+            "D:\\Studies\\5sem\\Shame\\Images\\Memes\\arraysize.png",
+            "D:\\Studies\\5sem\\Shame\\Images\\Memes\\javalife.png"
+    };
 }

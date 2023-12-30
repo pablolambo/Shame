@@ -4,6 +4,10 @@ import Common.Utilities;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.Random;
+import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Calculator {
     private JFrame frame;
@@ -13,6 +17,7 @@ public class Calculator {
     private final JTextField predictionField = new JTextField();
     private JProgressBar shameBar;
     private final JComboBox<String> operatorComboBox = new JComboBox<>(new String[]{"+", "-", "*", "/"});
+    private String lastShownMemePath;
     private final ImageIcon shameIcon = new ImageIcon("D:\\Studies\\5sem\\Shame\\Images\\shame.png");
     private final ImageIcon goodJobIcon = new ImageIcon("D:\\Studies\\5sem\\Shame\\Images\\goodjob.png");
     private JLabel shameImageLabel = new JLabel();
@@ -30,6 +35,8 @@ public class Calculator {
         Utilities.addTextField(frame, secondInputField,175, 20, 50, 30);
         Utilities.addButton(frame, 235, 20, 50, 30, "=", this::calculate);
         Utilities.addTextField(frame, resultField, 295, 20, 50, 30);
+        Utilities.addButton(frame, 50, 180, 300, 30, "Show me a meme", this::showMeme);
+
 
         shameBar = Utilities.addShameBar(frame, shameBar,50, 80, 300, 20);
         Utilities.addPredictionTextField(frame, predictionField, 50, 110, 180, 50);
@@ -69,6 +76,10 @@ public class Calculator {
                     displayGoodJobImage();
                     consecutiveCorrectPredictions = 0;
                 }
+                predictionField.setBackground(Color.GREEN);
+            }else {
+                predictionField.setBackground(Color.RED);
+                consecutiveCorrectPredictions = 0;
             }
 
             if(shameBar.getValue() == 100){
@@ -154,6 +165,35 @@ public class Calculator {
         JOptionPane.showMessageDialog(frame, goodJobLabel, "Good Job! 3 correct answers in a row!", JOptionPane.PLAIN_MESSAGE);
         resetShameBar();
     }
+
+    private void showMeme(ActionEvent e) {
+        List<String> memePaths = Arrays.asList(Constants.MEME_PATHS);
+
+        if (memePaths.isEmpty()) {
+            JOptionPane.showMessageDialog(frame, "No memes available.", "No Memes", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        String randomMemePath = getRandomMeme(memePaths);
+        lastShownMemePath = randomMemePath;
+
+        ImageIcon memeIcon = new ImageIcon(randomMemePath);
+        JOptionPane.showMessageDialog(frame, new JLabel(memeIcon), "Meme Time!", JOptionPane.PLAIN_MESSAGE);
+    }
+
+    private String getRandomMeme(List<String> memePaths) {
+        Random random = new Random();
+        String randomMemePath;
+
+        // Keep picking a random meme until it's different from the last shown one
+        do {
+            randomMemePath = memePaths.get(random.nextInt(memePaths.size()));
+        } while (randomMemePath.equals(lastShownMemePath));
+
+        return randomMemePath;
+    }
+
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(Calculator::new);
     }
