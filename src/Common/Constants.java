@@ -46,4 +46,8 @@ public class Constants {
             "Developed by Paweł Frankowski\n" +
             "Email: pawelspam42@gmail.com\n" +
             "Github: github.com/pablolambo\n";
+
+    public static final String CORRECT_PREDICTIONS_COUNTER = "Correct Predictions: ";
+    public static final String WRONG_PREDICTIONS_COUNTER = "Wrong Predictions: ";
+
 }

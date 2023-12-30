@@ -25,6 +25,8 @@ public class Calculator {
     private JLabel goodJobLabel = new JLabel();
     private JTextArea historyPanel;
     private int consecutiveCorrectPredictions = 0;
+    private int correctPredictionsCounter = 0;
+    private int wrongPredictionsCounter = 0;
 
     Calculator() {
         frame = Utilities.SetupFrame(frame);
@@ -70,6 +72,7 @@ public class Calculator {
             double proximity;
             if(userPrediction == Constants.DEFAULT_PREDICTION)
             {
+                predictionField.setBackground(Color.WHITE);
                 proximity = 0;
             }else
             {
@@ -97,6 +100,7 @@ public class Calculator {
 
             if (userPrediction == result)
             {
+                correctPredictionsCounter++;
                 consecutiveCorrectPredictions++;
                 if (consecutiveCorrectPredictions == Constants.STREAK_THRESHOLD) {
                     displayGoodJobImage();
@@ -106,9 +110,12 @@ public class Calculator {
             }else if(userPrediction != result && userPrediction != Constants.DEFAULT_PREDICTION){
                 predictionField.setBackground(Color.RED);
                 consecutiveCorrectPredictions = 0;
+                wrongPredictionsCounter++;
             }
 
             updateHistoryPanel(num1, num2, operator, result, userPrediction);
+            updateCountersInTitle();
+
 
             if(shameBar.getValue() == 100){
                 showShameImage();
@@ -147,6 +154,7 @@ public class Calculator {
             return String.valueOf(result);
         }
     }
+
 
     private double validateInput(String input, boolean isPrediction) {
         if(isPrediction && input.isEmpty())
@@ -250,6 +258,11 @@ public class Calculator {
                 ex.printStackTrace();
             }
         }
+    }
+
+    private void updateCountersInTitle() {
+        frame.setTitle(Constants.CORRECT_PREDICTIONS_COUNTER + correctPredictionsCounter +
+                " | " + Constants.WRONG_PREDICTIONS_COUNTER + wrongPredictionsCounter);
     }
 
     public static void main(String[] args) {
