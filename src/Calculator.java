@@ -4,6 +4,9 @@ import Common.Utilities;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.Random;
+import java.util.Arrays;
+import java.util.List;
 
 public class Calculator {
     private JFrame frame;
@@ -13,26 +16,36 @@ public class Calculator {
     private final JTextField predictionField = new JTextField();
     private JProgressBar shameBar;
     private final JComboBox<String> operatorComboBox = new JComboBox<>(new String[]{"+", "-", "*", "/"});
-    private final ImageIcon shameIcon = new ImageIcon("D:\\Studies\\5sem\\Shame\\Images\\shame.png");
-    private final ImageIcon goodJobIcon = new ImageIcon("D:\\Studies\\5sem\\Shame\\Images\\goodjob.png");
+    private JLabel proximityLabel = new JLabel();
+    private String lastShownMemePath;
+    private final ImageIcon shameIcon = new ImageIcon(Constants.PROJECT_DIRECTORY + "/Images/shame.png");
+    private final ImageIcon goodJobIcon = new ImageIcon(Constants.PROJECT_DIRECTORY + "/Images/goodjob.png");
     private JLabel shameImageLabel = new JLabel();
     private JLabel goodJobLabel = new JLabel();
     private int consecutiveCorrectPredictions = 0;
 
-
     Calculator() {
         frame = Utilities.SetupFrame(frame);
+        Utilities.showMessageDialog(frame);
+
+        Utilities.createMenuBar(frame, this::showHelp, this::showAbout);
 
         Utilities.addTextField(frame, firstInputField,50, 20, 50, 30);
         Utilities.addOperatorComboBox(frame, 115, 20, 50, 30, operatorComboBox);
         Utilities.addTextField(frame, secondInputField,175, 20, 50, 30);
         Utilities.addButton(frame, 235, 20, 50, 30, "=", this::calculate);
         Utilities.addTextField(frame, resultField, 295, 20, 50, 30);
+        resultField.setEditable(false);
+        Utilities.addButton(frame, 50, 180, 300, 30, "Show me a meme", this::showMeme);
+
 
         shameBar = Utilities.addShameBar(frame, shameBar,50, 80, 300, 20);
         Utilities.addPredictionTextField(frame, predictionField, 50, 110, 180, 50);
 
-        shameImageLabel = Utilities.addLabel(frame, shameImageLabel);
+        proximityLabel.setBounds(250, 110, 150, 50);
+        frame.add(proximityLabel);
+
+        shameImageLabel = Utilities.addShameImageLabel(frame, shameImageLabel);
 
         frame.setVisible(true);
     }
@@ -49,9 +62,25 @@ public class Calculator {
 
             double userPrediction = validateInput(predictionField.getText(), true);
 
+            double proximity;
+            if(userPrediction == Constants.DEFAULT_PREDICTION)
+            {
+                proximity = 0;
+            }else
+            {
+                proximity = Math.abs(userPrediction - result);
+            }
+
+            if (proximity != 0) {
+                proximity = Math.round(proximity * 100.0) / 100.0;
+                proximityLabel.setText("Proximity: " + proximity);
+            } else {
+                proximityLabel.setText("");
+            }
+
             if (userPrediction == Constants.DEFAULT_PREDICTION)
             {
-                 consecutiveCorrectPredictions = 0;
+                consecutiveCorrectPredictions = 0;
             }
 
             if (userPrediction != result && userPrediction != Constants.DEFAULT_PREDICTION)
@@ -60,6 +89,7 @@ public class Calculator {
                 consecutiveCorrectPredictions = 0;
             }
 
+
             if (userPrediction == result)
             {
                 consecutiveCorrectPredictions++;
@@ -67,6 +97,10 @@ public class Calculator {
                     displayGoodJobImage();
                     consecutiveCorrectPredictions = 0;
                 }
+                predictionField.setBackground(Color.GREEN);
+            }else if(userPrediction != result && userPrediction != Constants.DEFAULT_PREDICTION){
+                predictionField.setBackground(Color.RED);
+                consecutiveCorrectPredictions = 0;
             }
 
             if(shameBar.getValue() == 100){
@@ -125,10 +159,6 @@ public class Calculator {
         } else if (currentValue == 100) {
             showShameImage();
         }
-//        else {
-//            shameBar.setValue(0);
-//            shameBar.setString("Shame progress");
-//        }
     }
 
     private void showShameImage() {
@@ -152,6 +182,41 @@ public class Calculator {
         JOptionPane.showMessageDialog(frame, goodJobLabel, "Good Job! 3 correct answers in a row!", JOptionPane.PLAIN_MESSAGE);
         resetShameBar();
     }
+
+    private void showMeme(ActionEvent e) {
+        List<String> memePaths = Arrays.asList(Constants.MEME_PATHS);
+
+        if (memePaths.isEmpty()) {
+            JOptionPane.showMessageDialog(frame, "No memes available.", "No Memes", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        String randomMemePath = getRandomMeme(memePaths);
+        lastShownMemePath = randomMemePath;
+
+        ImageIcon memeIcon = new ImageIcon(randomMemePath);
+        JOptionPane.showMessageDialog(frame, new JLabel(memeIcon), "Meme Time!", JOptionPane.PLAIN_MESSAGE);
+    }
+
+    private String getRandomMeme(List<String> memePaths) {
+        Random random = new Random();
+        String randomMemePath;
+
+        do {
+            randomMemePath = memePaths.get(random.nextInt(memePaths.size()));
+        } while (randomMemePath.equals(lastShownMemePath));
+
+        return randomMemePath;
+    }
+
+    private void showHelp(ActionEvent e) {
+        JOptionPane.showMessageDialog(frame, Constants.HELP_MESSAGE, "Help", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void showAbout(ActionEvent e) {
+        JOptionPane.showMessageDialog(frame, Constants.ABOUT_MESSAGE, "About", JOptionPane.INFORMATION_MESSAGE);
+    }
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(Calculator::new);
     }
