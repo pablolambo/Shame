@@ -16,7 +16,9 @@ public class Calculator {
     private final JTextField resultField = new JTextField();
     private final JTextField predictionField = new JTextField();
     private JProgressBar shameBar;
-    private final JComboBox<String> operatorComboBox = new JComboBox<>(new String[]{"+", "-", "*", "/"});
+    private final String[] operators = {"+", "-", "*", "/"};
+    private final JComboBox<String> operatorComboBox = new JComboBox<>(operators);
+    private final Random random = new Random();
     private JLabel proximityLabel = new JLabel();
     private String lastShownMemePath;
     private final ImageIcon shameIcon = new ImageIcon(Constants.PROJECT_DIRECTORY + "/Images/shame.png");
@@ -25,11 +27,30 @@ public class Calculator {
     private JLabel goodJobLabel = new JLabel();
     private JTextArea historyPanel;
     private int consecutiveCorrectPredictions = 0;
+    private JLabel correctPredictionsLabel = new JLabel();
+    private JLabel wrongPredictionsLabel = new JLabel();
+    private JProgressBar predictionPercentageBar = new JProgressBar(JProgressBar.HORIZONTAL, 0, 100);
     private int correctPredictionsCounter = 0;
     private int wrongPredictionsCounter = 0;
 
+
     Calculator() {
         frame = Utilities.SetupFrame(frame);
+        
+        setupBasicFunctionalitiesAndComponents();
+
+        setupShameBar();
+        setupRandomCalculationGeneratorButton();
+        setupProximityLabel();
+        setupHistoryPanel();
+        setupPredictionLabels();
+
+        shameImageLabel = Utilities.addShameImageLabel(frame, shameImageLabel);
+
+        frame.setVisible(true);
+    }
+
+    private void setupBasicFunctionalitiesAndComponents() {
         Utilities.showMessageDialog(frame);
 
         Utilities.createMenuBar(frame, this::showHelp, this::showAbout);
@@ -41,20 +62,39 @@ public class Calculator {
         Utilities.addTextField(frame, resultField, 295, 20, 50, 30);
         resultField.setEditable(false);
         Utilities.addButton(frame, 50, 180, 300, 30, "Show me a meme", this::showMeme);
+    }
 
-
+    private void setupShameBar() {
         shameBar = Utilities.addShameBar(frame, shameBar,50, 80, 300, 20);
         Utilities.addPredictionTextField(frame, predictionField, 50, 110, 180, 50);
+    }
 
+    private void setupRandomCalculationGeneratorButton() {
+        Utilities.addButton(frame, 15, 20, 30, 30, "", this::generateRandomCalculation)
+                .setIcon(new ImageIcon(Constants.PROJECT_DIRECTORY + "/Images/dice.png"));
+    }
+
+    private void setupProximityLabel() {
         proximityLabel.setBounds(250, 110, 150, 50);
         frame.add(proximityLabel);
+    }
 
-        historyPanel = Utilities.addHistoryPanel(frame, 360, 20, 200, 185);
+    private void setupHistoryPanel() {
+        historyPanel = Utilities.addHistoryPanel(frame, 360, 20, 275, 185);
         historyPanel.setEditable(false);
+    }
 
-        shameImageLabel = Utilities.addShameImageLabel(frame, shameImageLabel);
-
-        frame.setVisible(true);
+    private void setupPredictionLabels() {
+        correctPredictionsLabel.setBounds(50, 230, 150, 20);
+        frame.add(correctPredictionsLabel);
+        wrongPredictionsLabel.setBounds(400, 230, 150, 20);
+        frame.add(wrongPredictionsLabel);
+        predictionPercentageBar.setBounds(185, 230, 200, 20);
+        frame.add(predictionPercentageBar);
+        predictionPercentageBar.setString("Prediction Percentage");
+        correctPredictionsLabel.setText(Constants.CORRECT_PREDICTIONS_LABEL + correctPredictionsCounter);
+        wrongPredictionsLabel.setText(Constants.WRONG_PREDICTIONS_LABEL + wrongPredictionsCounter);
+        predictionPercentageBar.setStringPainted(true);
     }
 
     private void calculate(ActionEvent e) {
@@ -73,6 +113,7 @@ public class Calculator {
             if(userPrediction == Constants.DEFAULT_PREDICTION)
             {
                 predictionField.setBackground(Color.WHITE);
+                consecutiveCorrectPredictions = 0;
                 proximity = 0;
             }else
             {
@@ -86,35 +127,41 @@ public class Calculator {
                 proximityLabel.setText("");
             }
 
-            if (userPrediction == Constants.DEFAULT_PREDICTION)
-            {
-                consecutiveCorrectPredictions = 0;
+            double roundedResult = Double.parseDouble(String.format("%.2f", result));
+            double absoluteDifference = Math.abs(userPrediction - roundedResult);
+            boolean isPredictionAlmostCorrect = false;
+
+            if (absoluteDifference <= 5) {
+                isPredictionAlmostCorrect = true;
+                predictionField.setBackground(Color.YELLOW);
+            }
+            else {
+                isPredictionAlmostCorrect = false;
+                if (userPrediction == roundedResult) {
+                    correctPredictionsCounter++;
+                    correctPredictionsLabel.setText(Constants.CORRECT_PREDICTIONS_LABEL + correctPredictionsCounter);
+                    consecutiveCorrectPredictions++;
+                    if (consecutiveCorrectPredictions == Constants.STREAK_THRESHOLD) {
+                        displayGoodJobImage();
+                        consecutiveCorrectPredictions = 0;
+                    }
+                    predictionField.setBackground(Color.GREEN);
+                } else if (userPrediction != result && userPrediction != Constants.DEFAULT_PREDICTION) {
+                    predictionField.setBackground(Color.RED);
+                    consecutiveCorrectPredictions = 0;
+                    wrongPredictionsCounter++;
+                    wrongPredictionsLabel.setText(Constants.WRONG_PREDICTIONS_LABEL + wrongPredictionsCounter);
+                }
             }
 
-            if (userPrediction != result && userPrediction != Constants.DEFAULT_PREDICTION)
+            if (userPrediction != result && userPrediction != Constants.DEFAULT_PREDICTION && !isPredictionAlmostCorrect)
             {
                 increaseShameBar();
                 consecutiveCorrectPredictions = 0;
             }
 
-
-            if (userPrediction == result)
-            {
-                correctPredictionsCounter++;
-                consecutiveCorrectPredictions++;
-                if (consecutiveCorrectPredictions == Constants.STREAK_THRESHOLD) {
-                    displayGoodJobImage();
-                    consecutiveCorrectPredictions = 0;
-                }
-                predictionField.setBackground(Color.GREEN);
-            }else if(userPrediction != result && userPrediction != Constants.DEFAULT_PREDICTION){
-                predictionField.setBackground(Color.RED);
-                consecutiveCorrectPredictions = 0;
-                wrongPredictionsCounter++;
-            }
-
             updateHistoryPanel(num1, num2, operator, result, userPrediction);
-            updateCountersInTitle();
+            updateCounters();
 
 
             if(shameBar.getValue() == 100){
@@ -151,7 +198,7 @@ public class Calculator {
         if (result % 1 == 0) {
             return String.valueOf((int) result);
         } else {
-            return String.valueOf(result);
+            return String.format("%.2f", result);
         }
     }
 
@@ -259,10 +306,25 @@ public class Calculator {
             }
         }
     }
+    private void updateCounters() {
+        correctPredictionsLabel.setText(Constants.CORRECT_PREDICTIONS_LABEL + correctPredictionsCounter);
+        wrongPredictionsLabel.setText(Constants.WRONG_PREDICTIONS_LABEL + wrongPredictionsCounter);
 
-    private void updateCountersInTitle() {
-        frame.setTitle(Constants.CORRECT_PREDICTIONS_COUNTER + correctPredictionsCounter +
-                " | " + Constants.WRONG_PREDICTIONS_COUNTER + wrongPredictionsCounter);
+        int totalPredictions = correctPredictionsCounter + wrongPredictionsCounter;
+        int percentage = totalPredictions > 0 ?
+                (correctPredictionsCounter * 100) / totalPredictions : 0;
+
+        predictionPercentageBar.setValue(percentage);
+        predictionPercentageBar.setString(percentage + "%");
+
+        predictionPercentageBar.setStringPainted(true);
+    }
+
+    private void generateRandomCalculation(ActionEvent e) {
+        firstInputField.setText(String.valueOf(random.nextInt(100) + 1));
+        secondInputField.setText(String.valueOf(random.nextInt(100) + 1));
+        String randomOperator = operators[random.nextInt(operators.length)];
+        operatorComboBox.setSelectedItem(randomOperator);
     }
 
     public static void main(String[] args) {
