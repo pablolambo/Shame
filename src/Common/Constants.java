@@ -25,4 +25,19 @@ public class Constants {
             "D:\\Studies\\5sem\\Shame\\Images\\Memes\\arraysize.png",
             "D:\\Studies\\5sem\\Shame\\Images\\Memes\\javalife.png"
     };
+    public static final String HELP_MESSAGE = "Instructions:\n\n" +
+            "1. Enter two numbers in the input fields.\n" +
+            "2. Select an operator from the drop-down menu.\n" +
+            "3. Click the '=' button to calculate the result.\n" +
+            "4. Make a prediction of the result in the prediction field.\n" +
+            "5. The Shame Bar progresses if your prediction is incorrect.\n" +
+            "6. Strive for correct predictions to avoid the Shame Bar.\n" +
+            "7. Get three correct predictions in a row for a Good Job reward.\n" +
+            "8. You can take a break and enjoy a meme by clicking 'Show me a meme'.\n\n" +
+            "Have fun calculating and avoiding shame!";
+
+    public static final String ABOUT_MESSAGE = "Shame Calculator v1.0.0\n" +
+            "Developed by Paweł Frankowski\n" +
+            "Email: pawelspam42@gmail.com\n" +
+            "Github: github.com/pablolambo\n";
 }

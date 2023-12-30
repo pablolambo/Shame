@@ -54,16 +54,36 @@ public class Utilities {
         predictionField.setBorder(BorderFactory.createTitledBorder("Make a prediction of a result"));
     }
 
-    public static JLabel addLabel(JFrame frame, JLabel shameImageLabel){
+    public static JLabel addShameImageLabel(JFrame frame, JLabel shameImageLabel){
         shameImageLabel = new JLabel();
         shameImageLabel.setBounds(375, 50, 350, 350);
         frame.add(shameImageLabel);
         return shameImageLabel;
     }
 
-
     public static void showMessageDialog(JFrame frame) {
         String randomMessage = Constants.WELCOME_MESSAGES[(int) (Math.random() * Constants.WELCOME_MESSAGES.length)];
         JOptionPane.showMessageDialog(frame, randomMessage, "Welcome", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public static JMenuBar createMenuBar(JFrame frame, ActionListener helpListener, ActionListener aboutListener) {
+        JMenuBar menuBar = new JMenuBar();
+
+        JMenu helpMenu = new JMenu("Help");
+        JMenuItem helpItem = new JMenuItem("Help");
+        helpItem.addActionListener(helpListener);
+        helpMenu.add(helpItem);
+
+        JMenu aboutMenu = new JMenu("About");
+        JMenuItem aboutItem = new JMenuItem("About");
+        aboutItem.addActionListener(aboutListener);
+        aboutMenu.add(aboutItem);
+
+        menuBar.add(helpMenu);
+        menuBar.add(aboutMenu);
+
+        frame.setJMenuBar(menuBar);
+
+        return menuBar;
     }
 }
