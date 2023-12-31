@@ -152,10 +152,11 @@ public class Calculator {
         Utilities.addTextField(frame, firstInputField,50, 20, 50, 30);
         Utilities.addOperatorComboBox(frame, 115, 20, 50, 30, operatorComboBox);
         Utilities.addTextField(frame, secondInputField,175, 20, 50, 30);
-        JButton calculateButton = Utilities.addButton(frame, 235, 20, 50, 30, "=", this::calculate);
+        Utilities.addButton(frame, 235, 20, 50, 30, "=", this::calculate);
         Utilities.addTextField(frame, resultField, 295, 20, 50, 30);
 
         resultField.setEditable(false);
+        resultField.setVisible(false);
         Utilities.addButton(frame, 50, 180, 300, 30, "Show me a meme", this::showMeme);
     }
 
