@@ -1,9 +1,6 @@
 import Common.Constants;
 import Common.Utilities;
-
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -34,6 +31,7 @@ public class Calculator {
     private JProgressBar predictionPercentageBar = new JProgressBar(JProgressBar.HORIZONTAL, 0, 100);
     private int correctPredictionsCounter = 0;
     private int wrongPredictionsCounter = 0;
+    private boolean isPredictionSubmited = false;
 
 
     Calculator() {
@@ -46,6 +44,7 @@ public class Calculator {
         setupProximityLabel();
         setupHistoryPanel();
         setupPredictionLabels();
+
 
         shameImageLabel = Utilities.addShameImageLabel(frame, shameImageLabel);
 
@@ -70,13 +69,9 @@ public class Calculator {
                 predictionField.setBackground(Color.WHITE);
                 consecutiveCorrectPredictions = 0;
                 proximity = 0;
-                //predictionField.setText("Prediction blocked!");
-                //predictionField.setEditable(false);
             }
             else
             {
-                //predictionField.setText("");
-                //predictionField.setEditable(true);
                 proximity = Math.abs(userPrediction - result);
             }
 
@@ -140,6 +135,8 @@ public class Calculator {
                 showShameImage();
             }
 
+            generateRandomCalculation(e);
+
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(frame, "Invalid input. Please enter valid numbers.", "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ArithmeticException ex) {
@@ -156,8 +153,8 @@ public class Calculator {
         Utilities.addOperatorComboBox(frame, 115, 20, 50, 30, operatorComboBox);
         Utilities.addTextField(frame, secondInputField,175, 20, 50, 30);
         JButton calculateButton = Utilities.addButton(frame, 235, 20, 50, 30, "=", this::calculate);
-        //calculateButton.
         Utilities.addTextField(frame, resultField, 295, 20, 50, 30);
+
         resultField.setEditable(false);
         Utilities.addButton(frame, 50, 180, 300, 30, "Show me a meme", this::showMeme);
     }
@@ -262,6 +259,7 @@ public class Calculator {
     private void displayGoodJobImage() {
         goodJobLabel.setIcon(goodJobIcon);
         JOptionPane.showMessageDialog(frame, goodJobLabel, "Good Job! 3 correct answers in a row!", JOptionPane.PLAIN_MESSAGE);
+        predictionField.setBackground(Color.WHITE);
         resetShameBar();
     }
 
@@ -309,8 +307,22 @@ public class Calculator {
                 .append(" = ")
                 .append(result);
 
-        if (userPrediction != Constants.DEFAULT_PREDICTION) {
-            historyEntry.append(" | Prediction: ").append(userPrediction);
+        if (userPrediction != Constants.DEFAULT_PREDICTION)
+        {
+            double roundedResult = Double.parseDouble(String.format("%.2f", result));
+            double absoluteDifference = Math.abs(userPrediction - roundedResult);
+
+            if(userPrediction == result)
+            {
+                historyEntry.append(" | Prediction: ").append(userPrediction).append(" (correct)");
+            }
+            else if (absoluteDifference <= 5)
+            {
+                historyEntry.append(" | Prediction: ").append(userPrediction).append(" (almost correct)");
+            }
+            else {
+                historyEntry.append(" | Prediction: ").append(userPrediction).append(" (wrong)");
+            }
         }
 
         historyPanel.append(historyEntry + "\n");
@@ -321,8 +333,8 @@ public class Calculator {
                 int start = historyPanel.getLineStartOffset(lineCount - 10);
                 int end = historyPanel.getLineEndOffset(lineCount - 1);
                 historyPanel.replaceRange("", start, end);
-            } catch (BadLocationException ex) {
-                ex.printStackTrace();
+            } catch (BadLocationException e) {
+                e.printStackTrace();
             }
         }
     }
