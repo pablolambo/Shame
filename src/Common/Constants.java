@@ -10,6 +10,7 @@ public class Constants {
     public static final int STREAK_THRESHOLD = 3;
     public static final int SHAME_PROGRESS_VALUE = 25;
     public static final double DEFAULT_PREDICTION = 0.0006;
+    public static final double ABSOLUTE_DIFFERENCE_VALUE = 1000;
     public static final String[] WELCOME_MESSAGES = {
             "Welcome to the Shame Calculator!",
             "Get ready for a unique calculator experience!",

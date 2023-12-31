@@ -29,7 +29,7 @@ public class Utilities {
     }
 
     public static JFrame SetupFrame(JFrame frame) {
-        frame = new JFrame("Calculator component project");
+        frame = new JFrame("Shame Calculator");
         frame.setSize(1000, 500);
         frame.getContentPane().setBackground(new Color(Color.lightGray.getRGB()));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

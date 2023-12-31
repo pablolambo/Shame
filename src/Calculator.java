@@ -2,6 +2,8 @@ import Common.Constants;
 import Common.Utilities;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -36,7 +38,7 @@ public class Calculator {
 
     Calculator() {
         frame = Utilities.SetupFrame(frame);
-        
+
         setupBasicFunctionalitiesAndComponents();
 
         setupShameBar();
@@ -50,6 +52,101 @@ public class Calculator {
         frame.setVisible(true);
     }
 
+    private void calculate(ActionEvent e) {
+        try
+        {
+            double num1 = validateInput(firstInputField.getText(), false);
+            double num2 = validateInput(secondInputField.getText(), false);
+            String operator = (String)operatorComboBox.getSelectedItem();
+            double result = performCalculation(num1, num2, operator);
+
+            resultField.setText(formatResult(result));
+
+            double userPrediction = validateInput(predictionField.getText(), true);
+
+            double proximity;
+            if(userPrediction == Constants.DEFAULT_PREDICTION)
+            {
+                predictionField.setBackground(Color.WHITE);
+                consecutiveCorrectPredictions = 0;
+                proximity = 0;
+                //predictionField.setText("Prediction blocked!");
+                //predictionField.setEditable(false);
+            }
+            else
+            {
+                //predictionField.setText("");
+                //predictionField.setEditable(true);
+                proximity = Math.abs(userPrediction - result);
+            }
+
+            if (proximity != 0)
+            {
+                proximity = Math.round(proximity * 100.0) / 100.0;
+                proximityLabel.setText("Proximity: " + proximity);
+            }
+            else
+            {
+                proximityLabel.setText("");
+            }
+
+            double roundedResult = Double.parseDouble(String.format("%.2f", result));
+            double absoluteDifference = Constants.ABSOLUTE_DIFFERENCE_VALUE;
+            if(userPrediction != Constants.DEFAULT_PREDICTION)
+            {
+                absoluteDifference = Math.abs(userPrediction - roundedResult);
+            }
+            boolean isPredictionAlmostCorrect = false;
+
+            if (absoluteDifference <= 5)
+            {
+                isPredictionAlmostCorrect = true;
+                predictionField.setBackground(Color.YELLOW);
+            }
+
+            if (userPrediction == roundedResult)
+            {
+                isPredictionAlmostCorrect = false;
+                correctPredictionsCounter++;
+                correctPredictionsLabel.setText(Constants.CORRECT_PREDICTIONS_LABEL + correctPredictionsCounter);
+                consecutiveCorrectPredictions++;
+                if (consecutiveCorrectPredictions == Constants.STREAK_THRESHOLD)
+                {
+                    displayGoodJobImage();
+                    consecutiveCorrectPredictions = 0;
+                }
+                predictionField.setBackground(Color.GREEN);
+            }
+            else if (userPrediction != result && userPrediction != Constants.DEFAULT_PREDICTION && !isPredictionAlmostCorrect)
+            {
+                isPredictionAlmostCorrect = false;
+                predictionField.setBackground(Color.RED);
+                consecutiveCorrectPredictions = 0;
+                wrongPredictionsCounter++;
+                wrongPredictionsLabel.setText(Constants.WRONG_PREDICTIONS_LABEL + wrongPredictionsCounter);
+            }
+
+
+            if (userPrediction != result && userPrediction != Constants.DEFAULT_PREDICTION && !isPredictionAlmostCorrect)
+            {
+                increaseShameBar();
+                consecutiveCorrectPredictions = 0;
+            }
+
+            updateHistoryPanel(num1, num2, operator, result, userPrediction);
+            updateCounters();
+
+            if(shameBar.getValue() == 100){
+                showShameImage();
+            }
+
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(frame, "Invalid input. Please enter valid numbers.", "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ArithmeticException ex) {
+            JOptionPane.showMessageDialog(frame, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     private void setupBasicFunctionalitiesAndComponents() {
         Utilities.showMessageDialog(frame);
 
@@ -58,7 +155,8 @@ public class Calculator {
         Utilities.addTextField(frame, firstInputField,50, 20, 50, 30);
         Utilities.addOperatorComboBox(frame, 115, 20, 50, 30, operatorComboBox);
         Utilities.addTextField(frame, secondInputField,175, 20, 50, 30);
-        Utilities.addButton(frame, 235, 20, 50, 30, "=", this::calculate);
+        JButton calculateButton = Utilities.addButton(frame, 235, 20, 50, 30, "=", this::calculate);
+        //calculateButton.
         Utilities.addTextField(frame, resultField, 295, 20, 50, 30);
         resultField.setEditable(false);
         Utilities.addButton(frame, 50, 180, 300, 30, "Show me a meme", this::showMeme);
@@ -95,84 +193,6 @@ public class Calculator {
         correctPredictionsLabel.setText(Constants.CORRECT_PREDICTIONS_LABEL + correctPredictionsCounter);
         wrongPredictionsLabel.setText(Constants.WRONG_PREDICTIONS_LABEL + wrongPredictionsCounter);
         predictionPercentageBar.setStringPainted(true);
-    }
-
-    private void calculate(ActionEvent e) {
-        try
-        {
-            double num1 = validateInput(firstInputField.getText(), false);
-            double num2 = validateInput(secondInputField.getText(), false);
-            String operator = (String)operatorComboBox.getSelectedItem();
-            double result = performCalculation(num1, num2, operator);
-
-            resultField.setText(formatResult(result));
-
-            double userPrediction = validateInput(predictionField.getText(), true);
-
-            double proximity;
-            if(userPrediction == Constants.DEFAULT_PREDICTION)
-            {
-                predictionField.setBackground(Color.WHITE);
-                consecutiveCorrectPredictions = 0;
-                proximity = 0;
-            }else
-            {
-                proximity = Math.abs(userPrediction - result);
-            }
-
-            if (proximity != 0) {
-                proximity = Math.round(proximity * 100.0) / 100.0;
-                proximityLabel.setText("Proximity: " + proximity);
-            } else {
-                proximityLabel.setText("");
-            }
-
-            double roundedResult = Double.parseDouble(String.format("%.2f", result));
-            double absoluteDifference = Math.abs(userPrediction - roundedResult);
-            boolean isPredictionAlmostCorrect = false;
-
-            if (absoluteDifference <= 5) {
-                isPredictionAlmostCorrect = true;
-                predictionField.setBackground(Color.YELLOW);
-            }
-            else {
-                isPredictionAlmostCorrect = false;
-                if (userPrediction == roundedResult) {
-                    correctPredictionsCounter++;
-                    correctPredictionsLabel.setText(Constants.CORRECT_PREDICTIONS_LABEL + correctPredictionsCounter);
-                    consecutiveCorrectPredictions++;
-                    if (consecutiveCorrectPredictions == Constants.STREAK_THRESHOLD) {
-                        displayGoodJobImage();
-                        consecutiveCorrectPredictions = 0;
-                    }
-                    predictionField.setBackground(Color.GREEN);
-                } else if (userPrediction != result && userPrediction != Constants.DEFAULT_PREDICTION) {
-                    predictionField.setBackground(Color.RED);
-                    consecutiveCorrectPredictions = 0;
-                    wrongPredictionsCounter++;
-                    wrongPredictionsLabel.setText(Constants.WRONG_PREDICTIONS_LABEL + wrongPredictionsCounter);
-                }
-            }
-
-            if (userPrediction != result && userPrediction != Constants.DEFAULT_PREDICTION && !isPredictionAlmostCorrect)
-            {
-                increaseShameBar();
-                consecutiveCorrectPredictions = 0;
-            }
-
-            updateHistoryPanel(num1, num2, operator, result, userPrediction);
-            updateCounters();
-
-
-            if(shameBar.getValue() == 100){
-                showShameImage();
-            }
-
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(frame, "Invalid input. Please enter valid numbers.", "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ArithmeticException ex) {
-            JOptionPane.showMessageDialog(frame, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
     }
 
     private double performCalculation(double num1, double num2, String operator) {
@@ -325,6 +345,7 @@ public class Calculator {
         secondInputField.setText(String.valueOf(random.nextInt(100) + 1));
         String randomOperator = operators[random.nextInt(operators.length)];
         operatorComboBox.setSelectedItem(randomOperator);
+        resultField.setText("");
     }
 
     public static void main(String[] args) {
