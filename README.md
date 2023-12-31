@@ -10,15 +10,8 @@ This Java calculator study project is designed for educational purposes to enhan
 
 - Java Development Kit (JDK) installed on your machine.
 
-## Running the Calculator
-Compile Java files
-```bash
-javac src/Calculator.java src/CalculatorController.java
-```
-Run the program
-```bash
-java src.Calculator
-```
+## How to run the Shame Calculator
+Just open ShameCalculator.jar file.
 
 ### 10 Functionalities:
 1. **Basic Calculation:**
