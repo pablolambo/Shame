@@ -1,0 +1,51 @@
+Paweł Frankowski Informatyka stacjonarnie 5 semestr U-19537
+Sprawozdanie: Projekt Kalkulatora Wstydu z wykorzystaniem projektowania opartego na komponentach.
+
+Wstęp:
+Aplikacja Kalkulator Wstydu została zbudowana w oparciu o projektowanie oparte na komponentach, czyli architekturę oprogramowania, która dzieli system na moduły, które są od siebie niezależne, ponownie używalne i modularne. Wykorzystanie paradygmatu programowania obiektowego w ramach tej architektury umożliwiło skoncentrowanie się na tworzeniu obiektów reprezentujących konkretne elementy funkcjonalności. Aby to osiągnąć korzystałem z współbieżnego, opartego na klasach, obiektowego języka - Java. Do utworzenia graficznego interfejsu użytkownika użyłem zestaw komponentów Java Swing.
+
+Co to komponent?
+Komponent to fundamentalny element konstrukcyjny oprogramowania, opisujący swoje interfejsy w sposób deklaratywny, a wszystkie potrzebne zależności są jasno określone. Komponent może być przekazany do wdrożenia osobie,
+która nie jest jego twórcą. Komponenty zazwyczaj rozszerzają obiekty na poziomie implementacyjnym, choć istnieją również technologie komponentowe zbudowane na strukturalnych językach. Kluczowymi cechami komponentu są oferowane interfejsy i wymagane zależności, co pozwala traktować go jako zamkniętą jednostkę, dostarczającą usługi i jednocześnie ukrywającą swoją wewnętrzną strukturę. To sprawia, że komponent jest bardziej abstrakcyjny niż obiekt, umożliwiając izolację jego implementacji i nieingerowanie w strukturę innych komponentów.
+
+Zalety projektowania opartego na komponentach:
+
+1. Modularność:
+- Ułatwiona Konserwacja: Komponenty w Kalkulatorze Wstydu są samodzielne, co ułatwia identyfikację, izolację i naprawę problemów bez wpływu na inne części aplikacji.
+- Ponowne Użycie Kodu: Komponenty są zaprojektowane tak, aby można było je ponownie używać w różnych częściach aplikacji lub nawet w przyszłych projektach, co redukuje redundancję i zwiększa efektywność.
+
+2. Skalowalność:
+- Łatwość integracji: Nowe funkcje lub ulepszenia można łatwo zintegrować, dodając lub aktualizując konkretne komponenty, bez wpływu na całą aplikację.
+- Ułatwiona współpraca: Wielu programistów mogłoby pracować dalej nad różnymi komponentami jednocześnie, co ułatwia rozwój i szybsze zakończenie projektu.
+
+3. Elastyczność i adaptowalność:
+- Dostosowywanie: Komponenty mogą być dostosowywane lub zastępowane bez wpływu na całą aplikację, co pozwala na elastyczne dostosowanie do zmieniających się wymagań.
+- Aktualizacje: Modułowa struktura komponentów ułatwia aktualizację lub wymianę poszczególnych elementów, zapewniając, że aplikacja pozostaje aktualna.
+
+4. Usprawnione testowanie i debugowanie:
+- Izolacja Problemów: Testowanie i debugowanie są bardziej zarządzalne dzięki izolacji komponentów. Problemy można śledzić do konkretnych modułów, co ułatwia proces debugowania.
+- Testowanie Jednostkowe: Poszczególne komponenty mogą być testowane osobno, zapewniając, że każda część aplikacji działa poprawnie w izolacji przed integracją.
+
+5. Interfejs Użytkownika:
+- Spójny Design: Komponenty, takie jak przyciski, pola tekstowe i paski postępu, utrzymują spójny design w całej aplikacji, dostarczając użytkownikom jednolitego i znajomego interfejsu.
+- Łatwe Stylizowanie: Komponenty interfejsu graficznego mogą być jednolicie stylizowane, zapewniając spójne i wizualnie atrakcyjne doświadczenie użytkownika.
+
+Implementacja projektowania opartego na komponentach w Kalkulatorze Wstydu:
+
+1. Komponenty Interfejsu Graficznego (GUI):
+- Przyciski, Pola Tekstowe i ComboBoxy: Te elementy są odrębnymi komponentami odpowiedzialnymi za interakcję użytkownika, wprowadzanie predykcji i generowanie losowych obliczeń. Ich modułowy design zapewnia łatwość użycia i spójność interfejsu użytkownika.
+
+2. Pasek wstydu i pasek procentowy dla predykcji wyniku:
+- Paski postępu: Te komponenty reprezentują poprawność użytkownika i procent predykcji. Ich niezależność umożliwia łatwe aktualizacje na podstawie wejścia użytkownika, bez wpływu na inne funkcjonalności.
+
+3. Panel historii:
+- Komponent TextArea: Panel historii jest zaimplementowany za pomocą komponentu TextArea, dostarczając modułowego rozwiązania do wyświetlania wcześniejszych obliczeń i predykcji.
+
+4. Wyświetlanie memów:
+- Ikony Obrazów: Funkcjonalność wyświetlania memów wykorzystuje ikony obrazów jako komponenty, zwiększając atrakcyjność wizualną aplikacji.
+
+5. Komponenty Logiczne:
+- Logika Predykcji: Logika obsługi predykcji, rozpoznawania serii poprawnych predykcji i nagradzania użytkownika jest zamknięta w niezależnych komponentach, co ułatwia konserwację i czytelność kodu.
+
+Podsumowanie:
+Adopcja projektowania opartego na komponentach w aplikacji Kalkulator Wstydu przynosi liczne korzyści, w tym modularność, skalowalność, elastyczność, usprawnione testowanie i udoskonalony interfejs użytkownika. Organizacja Kalkulatora Wstydu na niezależne, wzajemnie łączące się komponenty zapewnia, że ​​aplikacja jest nie tylko funkcjonalna, ale również łatwa w konserwacji i adaptacji do dalszego rozwijania kodu. Dzięki bibliotece Java Swing zrozumiałem na czym polega programowanie komponentowe, natomiast język programowania Java utrwalił moją wiedzę z programowania obiektowego.
