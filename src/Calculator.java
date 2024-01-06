@@ -31,7 +31,7 @@ public class Calculator {
     private JProgressBar predictionPercentageBar = new JProgressBar(JProgressBar.HORIZONTAL, 0, 100);
     private int correctPredictionsCounter = 0;
     private int wrongPredictionsCounter = 0;
-    private boolean isPredictionSubmited = false;
+    private final boolean isPredictionSubmited = false;
 
 
     Calculator() {
